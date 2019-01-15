@@ -1,15 +1,24 @@
-const { Pool } = require('pg')
-require('dotenv').config()
+require("dotenv").config();
 
-const pool = new Pool({
-    database: process.env.DB_NAME || 'projects',
-    host: process.env.DB_HOST || '127.0.0.1',
-    user: process.env.DB_USER || 'student',
-    password: process.env.DB_PASSWORD || 'student'
-})
+const knex = require("knex")({
+  client: "pg",
+  connection: {
+    database: "projects",
+    host: "127.0.0.1",
+    user: process.env.DB_USER
+  }
+});
 
-module.exports = {
-    query: (text, params, callback) => {
-        return pool.query(text, params, callback)
-    }
-}
+const getRelated = () => {
+  console.log("in GET /related");
+  const randomId = Math.floor(Math.random() * 10000000);
+  const randomIdFiveLess = randomId - 6;
+  return knex
+    .where("id", "<", randomId)
+    .andWhere("id", ">", randomIdFiveLess)
+    .select()
+    .from("projects")
+    .limit(5);
+};
+
+module.exports = getRelated;

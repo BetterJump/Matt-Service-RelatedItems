@@ -1,0 +1,21 @@
+version: "2"
+services:
+  app:
+    container_name: app
+    restart: always
+    build: .
+    ports:
+      - "3004:3004"
+    links:
+      - postgres
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: betterjumpuser
+      POSTGRES_HOST: postgres://localhost:5432/projects
+      POSTGRES_DB: projects
+    volumes:
+      - /var/lib/postgresql/data
+    ports:
+      - "5432"
